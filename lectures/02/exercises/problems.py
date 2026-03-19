@@ -8,6 +8,12 @@ Any 14 / 16 problems solved count as 100%
     name,
     method say_hi() which prints "Hello, I am {name}"
 """
+class User:
+    def __init__(self, name):
+        self.name = name
+    
+    def say_hi(self):
+        print(f"Hello, I am {self.name}")
 
 
 """
@@ -21,6 +27,21 @@ Rules:
 - Non-positive `deposit`/`withdraw` amounts are ignored.
 - `withdraw` bigger than current balance is ignored.
 """
+class BankAccount:
+    def __init__(self, owner: str, balance: float = 0.0) -> None:
+        self.owner = owner
+        self.balance = balance
+        if self.balance < 0:
+            self.balance = 0
+
+    def deposit(self, amount: float) -> None:
+        if amount > 0:
+            self.balance += amount
+
+    def withdraw(self, amount: float) -> None:
+        if amount > 0 and amount <= self.balance:
+            self.balance -= amount
+     
 
 
 """
@@ -33,6 +54,17 @@ Rules:
 - Members are stored in insertion order.
 - Each instance has independent member storage.
 """
+class Team:
+    def __init__(self) -> None:
+        self.members: list[str] = []
+
+    def add(self, name: str) -> None:
+        self.members.append(name)
+
+    def __len__(self) -> int:
+        return len(self.members)
+
+
 
 """ (Advanced, optional)
 5) QueueState
@@ -45,7 +77,20 @@ Rules:
 - FIFO behavior.
 - `pop` returns `None` when empty.
 """
-
+class QueueState:
+    def __init__(self) -> None:
+        self.items: list[str] = []
+        
+    def push(self, items: str) -> None:
+          self.items.append(items)
+        
+    def pop(self) -> str | None:
+        if len(self.items) > 0:
+            a = self.items.pop(0)
+            return a
+        else:
+            return None
+        
 
 """ (Advanced, optional)
 6) Wallet + custom errors
@@ -74,8 +119,26 @@ Rules:
 - `price < 0` or `qty <= 0` items are ignored.
 - `repr` must include `ShoppingCart`.
 """
+class ShoppingCart:
+    
+    def __init__(self) -> None:
+        self.items: list[str] = []
+
+    def add_item(self, name: str, price: float, qty: int = 1) -> None:
+        if price < 0 or qty <= 0:
+            return
+        self.items.append({"name": name, "price": price, "qty": qty})
 
 
+    def total_items(self) -> int:
+        return sum(item["qty"] for item in self.items)
+
+    def total_price(self) -> float:
+        return sum(item["price"] * item["qty"] for item in self.items)
+
+    def __repr__(self) -> str:
+        return "ShoppingCart" + str(self.items)
+        
 """
 8) Classroom (class attribute)
 Create class `Classroom` with class attribute:
@@ -88,6 +151,20 @@ Methods:
 Rules:
 - `set_school_name` must update shared class attribute for all instances.
 """
+class Classroom:
+    school_name = "Harbour Space"
+
+    def __init__(self, group_name: str) -> None:
+        self.students: list[str] = []
+
+    def add_student(self, name: str) -> None:
+        self.students.append(name)
+
+    def __len__(self) -> int:
+        return len(self.students)
+
+    def set_school_name(self, new_name: str) -> None:
+        Classroom.school_name = new_name
 
 
 """
@@ -99,6 +176,17 @@ Create class `Rectangle` with:
 Rules:
 - Store positive dimensions using absolute values.
 """
+
+class Rectangle:
+    def __init__(self, width: float, height: float) -> None:
+        self.width = abs(width)
+        self.height = abs(height)
+
+    def area(self) -> float:
+        return self.width * self.height
+
+    def perimeter(self) -> float:
+        return 2 * (self.width + self.height)
 
 
 """
@@ -126,6 +214,21 @@ Rules:
 - Discount percent is clamped to `[0, 100]`.
 """
 
+class Product:
+    def __init__(self, name: str, price: float) -> None:
+        self.name = name
+        self.price = max(0, price)
+
+    def get_price(self) -> float:
+        return self.price
+
+    def set_price(self, value: float) -> None:
+      self.price = max(0, value) 
+
+    def apply_discount(self, percent: float) -> None:
+        percent = max(0, min(100, percent))
+        self.price -= self.price * (percent / 100)
+
 
 """
 12) Person + Student (inheritance)
@@ -136,6 +239,22 @@ Required format:
 - `Person(name=Ana)`
 - `Student(name=Bo, group=G2)`
 """
+class Person:
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def describe(self) -> str:
+        return f"Person(name={self.name})"
+
+
+class Student(Person):
+    def __init__(self, name: str, group: str) -> None:
+        super().__init__(name)
+        self.group = group
+
+    def describe(self) -> str:
+        return f"Student(name={self.name}, group={self.group})"
+
 """
 
 
